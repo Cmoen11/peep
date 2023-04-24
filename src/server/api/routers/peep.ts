@@ -8,48 +8,58 @@ import {
 } from "~/server/api/trpc";
 
 export const peepRouter = createTRPCRouter({
-    getAll: publicProcedure.query(async ({ ctx }) => {
-        const peeps = await ctx.prisma.peeps.findMany({
-            select: {
-                id: true,
-                content: true,
-                createdAt: true,
-                author: {
-                    select: {
-                        id: true,
-                        name: true,
-                        image: true,
+    getAll: publicProcedure
+        // .input(
+        //     z.object({
+        //         orderBy: z
+        //             .enum(["createdAt", "likeCount"])
+        //             .optional()
+        //             .default("createdAt"),
+        //         order: z.enum(["asc", "desc"]).optional().default("desc"),
+        //     })
+        // )
+        .query(async ({ ctx }) => {
+            const peeps = await ctx.prisma.peeps.findMany({
+                select: {
+                    id: true,
+                    content: true,
+                    createdAt: true,
+                    author: {
+                        select: {
+                            id: true,
+                            name: true,
+                            image: true,
+                        },
                     },
-                },
-                likedBy: {
-                    select: {
-                        id: true,
-                        user: {
-                            select: {
-                                id: true,
+                    likedBy: {
+                        select: {
+                            id: true,
+                            user: {
+                                select: {
+                                    id: true,
+                                },
                             },
                         },
                     },
                 },
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-        });
+                orderBy: {
+                    createdAt: "desc",
+                },
+            });
 
-        const userId = ctx?.session?.user ? ctx.session.user.id : null;
-        const peepsWithLikes = peeps.map((peep) => {
-            return {
-                ...peep,
-                likeCount: peep.likedBy.length,
-                hasLiked: userId
-                    ? peep.likedBy.some((like) => like.user.id === userId)
-                    : false,
-            };
-        });
+            const userId = ctx?.session?.user ? ctx.session.user.id : null;
+            const peepsWithLikes = peeps.map((peep) => {
+                return {
+                    ...peep,
+                    likeCount: peep.likedBy.length,
+                    hasLiked: userId
+                        ? peep.likedBy.some((like) => like.user.id === userId)
+                        : false,
+                };
+            });
 
-        return peepsWithLikes;
-    }),
+            return peepsWithLikes;
+        }),
 
     create: protectedProcedure
         .input(z.object({ content: z.string() }))
