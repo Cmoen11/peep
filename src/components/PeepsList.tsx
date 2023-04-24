@@ -90,7 +90,7 @@ export function PeepActions({
     return (
         <div className="flex flex-row space-x-4">
             <button
-                className="flex flex-row items-center space-x-2 focus:outline-none hover:text-red-500"
+                className="flex flex-row items-center space-x-2 hover:text-red-500"
                 onClick={handleLikeClick}
                 disabled={status !== "authenticated"}
             >
