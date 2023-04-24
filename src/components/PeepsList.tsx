@@ -92,14 +92,20 @@ export function PeepActions({
             <button
                 className="flex flex-row items-center space-x-2 hover:text-red-500"
                 onClick={handleLikeClick}
-                disabled={status !== "authenticated"}
+                disabled={status !== "authenticated" || likeMutation.isLoading}
             >
-                {likedByUser ? (
-                    <AiFillHeart className="text-pink-500 hover:text-pink-700" />
+                {likeMutation.isLoading ? (
+                    <div className="animate-spin w-5 h-5 border-t-2 border-b-2 border-white rounded-full"></div>
                 ) : (
-                    <AiOutlineHeart className="text-white hover:text-pink-700" />
+                    <>
+                        {likedByUser ? (
+                            <AiFillHeart className="text-pink-500 hover:text-pink-700" />
+                        ) : (
+                            <AiOutlineHeart className="text-white hover:text-pink-700" />
+                        )}
+                        <div className="text-gray-500">{likeCount ?? 0}</div>
+                    </>
                 )}
-                <div className="text-gray-500">{likeCount ?? 0}</div>
             </button>
             {isAuthor && (
                 <button
