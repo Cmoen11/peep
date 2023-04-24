@@ -31,7 +31,7 @@ export const PostPeepForm = () => {
                 />
             </div>
             <button
-                className="bg-blue-500 w-2/12 h-15 hover:bg-blue-700 text-white font-bold rounded-r-full ml-2"
+                className="bg-blue-500 w-2/12 h-15 hover:bg-blue-700 text-white font-bold rounded-r-full"
                 type="submit"
                 disabled={peepMutation.isLoading}
             >
