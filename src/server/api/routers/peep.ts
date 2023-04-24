@@ -87,6 +87,11 @@ export const peepRouter = createTRPCRouter({
         const isAllowedToDelete = ctx.isAuthor && ctx.peep?.id;
 
         if (isAllowedToDelete) {
+            await ctx.prisma.like.deleteMany({
+                where: {
+                    peepId: ctx.peep?.id,
+                },
+            });
             await ctx.prisma.peeps.delete({
                 where: {
                     id: ctx.peep?.id,
