@@ -14,22 +14,29 @@ const Home: NextPage = () => {
                 <meta name="description" content="Peep your mind" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className="flex min-h-screen  flex-col items-center bg-slate-900 p-5">
-                <div className="flex flex-col w-2/4 space-x-4  gap-4 ">
-                    {status === "loading" && <div>Loading...</div>}
-                    {status === "authenticated" && <PostPeepForm />}
-                    {status === "unauthenticated" && (
-                        <div>
-                            <button
-                                onClick={() => signIn("discord")}
-                                className="bg-blue-500 w-2/12 h-15 hover:bg-blue-700 text-white font-bold rounded-full ml-2"
-                            >
-                                Sign in
-                            </button>
+            <main className="flex min-h-screen flex-col items-center bg-slate-900 p-5">
+                {status === "loading" ? (
+                    <div className="flex w-full items-center justify-center">
+                        <div className="animate-spin w-5 h-5 border-t-2 border-b-2 border-white rounded-full text-center"></div>
+                    </div>
+                ) : (
+                    <>
+                        <div className="flex flex-col w-full md:w-2/4 space-x-4 gap-8 md:px-0">
+                            {status === "authenticated" && <PostPeepForm />}
+                            {status === "unauthenticated" && (
+                                <div className="w-full md:w-auto">
+                                    <button
+                                        onClick={() => signIn("discord")}
+                                        className="bg-blue-500 w-full md:w-2/12 h-15 hover:bg-blue-700 text-white font-bold rounded-full md:ml-2"
+                                    >
+                                        Sign in
+                                    </button>
+                                </div>
+                            )}
+                            <PeepsList />
                         </div>
-                    )}
-                    <PeepsList />
-                </div>
+                    </>
+                )}
             </main>
         </>
     );
