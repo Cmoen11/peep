@@ -14,7 +14,7 @@ const Home: NextPage = () => {
                 <meta name="description" content="Peep your mind" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className="flex min-h-screen flex-col items-center bg-slate-900 p-5">
+            <main className="flex min-h-screen flex-col items-center  p-5">
                 {status === "loading" ? (
                     <div className="flex w-full items-center justify-center">
                         <div className="animate-spin w-5 h-5 border-t-2 border-b-2 border-white rounded-full text-center"></div>
