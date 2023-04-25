@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "~/server/api/trpc";
-import { exampleRouter } from "~/server/api/routers/example";
 import { peepRouter } from "./routers/peep";
+import { profileRouter } from "./routers/profile";
 
 /**
  * This is the primary router for your server.
@@ -8,8 +8,8 @@ import { peepRouter } from "./routers/peep";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-    example: exampleRouter,
     peep: peepRouter,
+    profile: profileRouter,
 });
 
 // export type definition of API

@@ -9,16 +9,12 @@ import {
 
 export const peepRouter = createTRPCRouter({
     getAll: publicProcedure
-        // .input(
-        //     z.object({
-        //         orderBy: z
-        //             .enum(["createdAt", "likeCount"])
-        //             .optional()
-        //             .default("createdAt"),
-        //         order: z.enum(["asc", "desc"]).optional().default("desc"),
-        //     })
-        // )
-        .query(async ({ ctx }) => {
+        .input(
+            z.object({
+                authorId: z.string().optional().nullable(),
+            })
+        )
+        .query(async ({ ctx, input }) => {
             const peeps = await ctx.prisma.peeps.findMany({
                 select: {
                     id: true,
@@ -29,6 +25,11 @@ export const peepRouter = createTRPCRouter({
                             id: true,
                             name: true,
                             image: true,
+                            Profile: {
+                                select: {
+                                    displayName: true,
+                                },
+                            },
                         },
                     },
                     likedBy: {
@@ -45,12 +46,21 @@ export const peepRouter = createTRPCRouter({
                 orderBy: {
                     createdAt: "desc",
                 },
+                where: {
+                    ...(input.authorId ? { authorId: input.authorId } : {}),
+                },
             });
 
             const userId = ctx?.session?.user ? ctx.session.user.id : null;
             const peepsWithLikes = peeps.map((peep) => {
                 return {
                     ...peep,
+                    author: {
+                        ...peep.author,
+                        displayName:
+                            peep.author.Profile?.displayName ??
+                            peep.author.name,
+                    },
                     likeCount: peep.likedBy.length,
                     hasLiked: userId
                         ? peep.likedBy.some((like) => like.user.id === userId)
