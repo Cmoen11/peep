@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { AiFillHeart, AiOutlineDelete, AiOutlineHeart } from "react-icons/ai";
 import { api } from "~/utils/api";
 import durationPlugin from "dayjs/plugin/duration";
+import Link from "next/link";
 dayjs.extend(durationPlugin);
 
 // peep list is a component that displays a list of peeps/tweets
@@ -19,9 +20,11 @@ function formatDateSince(duration: durationPlugin.Duration) {
     return `${minutes.toFixed(0)}m`;
 }
 
-export function PeepsList() {
+export function PeepsList(props: { profileId?: string }) {
     const { data } = useSession();
-    const { isLoading, data: peepsData } = api.peep.getAll.useQuery();
+    const { isLoading, data: peepsData } = api.peep.getAll.useQuery({
+        authorId: props.profileId,
+    });
 
     return (
         <div className="w-full flex flex-col gap-4  ">
@@ -52,9 +55,12 @@ export function PeepsList() {
                                 />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <div className="flex flex-row space-x-2 items-center">
+                                <Link
+                                    href={`/profile/${peep.author.id}`}
+                                    className="flex flex-row space-x-2 items-center"
+                                >
                                     <div className="text-white text-base font-semibold">
-                                        {peep.author.name}
+                                        {peep.author.displayName}
                                     </div>
                                     <div className="text-gray-500">
                                         @{peep.author.name}
@@ -63,7 +69,7 @@ export function PeepsList() {
                                     <div className="text-gray-500">
                                         {agoTextTwitterLike}
                                     </div>
-                                </div>
+                                </Link>
                                 <div className="text-white mt-1 text-base ">
                                     {peep.content}
                                 </div>

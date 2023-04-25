@@ -59,6 +59,15 @@ model User {
     sessions      Session[]
     Peeps         Peeps[]
     Like          Like[]
+    Profile       Profile?
+}
+
+model Profile {
+    userId      String  @id
+    User        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    displayName String?
+    bio         String?
+    verified    Boolean @default(false)
 }
 
 model Peeps {
